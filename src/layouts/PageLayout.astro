@@ -1,5 +1,5 @@
 ---
-// 给 src/pages 里的 Markdown 页面（例如 now.md）用的版式，页头和文章页一致：日期、标题、副标题。
+// 给 src/pages 里的 Markdown 页面（例如 now.md）用的版式。标题和文章页同一套字号，说明句不单独显示。
 import Comments from '../components/Comments.astro';
 import CommentsPreconnect from '../components/CommentsPreconnect.astro';
 import BaseLayout from './BaseLayout.astro';
@@ -24,15 +24,14 @@ const hasUpdated = updatedDate && !Number.isNaN(updatedDate.getTime());
 <BaseLayout title={title} description={description}>
   {comments && <CommentsPreconnect slot="head" />}
   <header class="post-header">
+    <h1>{title}</h1>
     {
       hasUpdated && (
-        <p class="post-info">
-          <time datetime={updatedDate.toISOString()}>更新于 {formatDate(updatedDate)}</time>
+        <p class="post-kicker">
+          <time class="post-date" datetime={updatedDate.toISOString()}>更新于 {formatDate(updatedDate)}</time>
         </p>
       )
     }
-    <h1>{title}</h1>
-    {description && <p class="post-subtitle">{description}</p>}
   </header>
   <article class="prose">
     <slot />

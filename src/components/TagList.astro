@@ -8,20 +8,22 @@ interface Props {
   showCount?: boolean;
   /** 写在最前面的说明文字，例如「标签：」。 */
   label?: string;
+  /** 文章标题下的黑底胶囊，而不是顿号隔开的文字链接。 */
+  pills?: boolean;
 }
 
-const { showCount = false, label } = Astro.props;
+const { showCount = false, label, pills = false } = Astro.props;
 const tags = Astro.props.tags.map((tag) =>
   typeof tag === 'string' ? { name: tag, count: 0 } : { name: tag.name, count: tag.posts.length },
 );
 ---
 
-<p class="tag-list">
+<p class:list={['tag-list', { 'tag-pills': pills }]}>
   {label}
   {
     tags.map((tag, index) => (
       <>
-        {index > 0 && '、'}
+        {!pills && index > 0 && '、'}
         <a href={getTagUrl(tag.name)}>{tag.name}</a>
         {showCount && <span class="tag-count">（{tag.count}）</span>}
       </>

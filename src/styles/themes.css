@@ -1,14 +1,18 @@
 /*
  * 浅色、深色两套主题的颜色变量。
  * 页面脚本会在 <html> 上写 data-theme；没开 JS 时由下面的媒体查询跟随系统。
+ * 标题接近纯色，正文约 82%，日期和附注约 58%。
  */
 
 :root {
   color-scheme: light;
   --bg: #ffffff;
-  --text: #171717;
-  --muted: #696969;
-  --secondary: #494949;
+  --strong: rgb(0 0 0 / 94%);
+  --text: rgb(0 0 0 / 82%);
+  --secondary: rgb(0 0 0 / 70%);
+  --muted: rgb(0 0 0 / 58%);
+  --pill-bg: #000;
+  --pill-text: #fff;
   --accent-soft: #f1f1f1;
   --selection: #dedede;
   --line: #dedede;
@@ -24,9 +28,12 @@
 :root[data-theme="dark"] {
   color-scheme: dark;
   --bg: #141414;
-  --text: #ededed;
-  --muted: #a3a3a3;
-  --secondary: #c4c4c4;
+  --strong: rgb(255 255 255 / 94%);
+  --text: rgb(255 255 255 / 82%);
+  --secondary: rgb(255 255 255 / 70%);
+  --muted: rgb(255 255 255 / 58%);
+  --pill-bg: #fff;
+  --pill-text: #141414;
   --accent-soft: #2a2a2a;
   --selection: #414141;
   --line: #373737;
@@ -44,9 +51,12 @@
   :root:not([data-theme="light"]) {
     color-scheme: dark;
     --bg: #141414;
-    --text: #ededed;
-    --muted: #a3a3a3;
-    --secondary: #c4c4c4;
+    --strong: rgb(255 255 255 / 94%);
+    --text: rgb(255 255 255 / 82%);
+    --secondary: rgb(255 255 255 / 70%);
+    --muted: rgb(255 255 255 / 58%);
+    --pill-bg: #fff;
+    --pill-text: #141414;
     --accent-soft: #2a2a2a;
     --selection: #414141;
     --line: #373737;

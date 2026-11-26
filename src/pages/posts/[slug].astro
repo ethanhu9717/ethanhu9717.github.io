@@ -9,7 +9,6 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import { AUTHOR_NAME } from '../../consts';
 import { withBase } from '../../utils/paths';
 import {
-  descriptionRepeatsBody,
   fillWithLatest,
   formatDate,
   getBacklinks,
@@ -51,11 +50,7 @@ interface Props {
 const { post, backlinks, related, more } = Astro.props;
 // 全是同标签的文章时叫「相关文章」，补了最新文章就叫「更多文章」。
 const moreTitle = more.length === related.length ? '相关文章' : '更多文章';
-const { Content, headings } = await render(post);
-// 只有二级标题达到 4 个的长文（通常是合集）才在正文上方放目录。
-const sections = headings.filter((heading) => heading.depth === 2);
-const showToc = sections.length >= 4;
-const showSubtitle = !descriptionRepeatsBody(post);
+const { Content } = await render(post);
 const tags = [...new Set(post.data.tags)];
 const description = post.data.description || getExcerpt(post);
 const image = `/og/${post.id}.png`;
@@ -87,38 +82,20 @@ const jsonLd = {
   <CommentsPreconnect slot="head" />
   <article class="post" data-pagefind-body>
     <header class="post-header">
-      <p class="post-info" data-pagefind-ignore>
-        <time datetime={post.data.date.toISOString()}>{formatDate(post.data.date)}</time>
-      </p>
       <h1 data-pagefind-meta="title">{post.data.title}</h1>
-      {showSubtitle && <p class="post-subtitle">{post.data.description}</p>}
+      {tags.length > 0 && <TagList tags={tags} pills />}
+      <p class="post-kicker" data-pagefind-ignore>
+        <time class="post-date" datetime={post.data.date.toISOString()}>{formatDate(post.data.date)}</time>
+        <span class="post-kicker-rest">
+          <span class="post-kicker-sep" aria-hidden="true"> · </span>
+          <span>{getReadingMinutes(post)} 分钟阅读</span>
+          <ViewCount slug={post.id} />
+        </span>
+      </p>
     </header>
-
-    {
-      showToc && (
-        <nav class="post-toc" aria-label="文章目录" data-pagefind-ignore>
-          <ol>
-            {sections.map((heading) => (
-              <li>
-                <a href={`#${heading.slug}`}>{heading.text}</a>
-              </li>
-            ))}
-          </ol>
-        </nav>
-      )
-    }
 
     <div class="prose">
       <Content />
-    </div>
-
-    {/* 这篇文章自己的信息紧跟在正文后面；分隔线以下才是别的文章和评论。 */}
-    <div class="post-meta" data-pagefind-ignore>
-      {tags.length > 0 && <TagList tags={tags} label="标签：" />}
-      <p class="post-info">
-        <span>{getReadingMinutes(post)} 分钟阅读</span>
-        <ViewCount slug={post.id} />
-      </p>
     </div>
   </article>
 
@@ -127,16 +104,11 @@ const jsonLd = {
       backlinks.length > 0 && (
         <section class="post-section" aria-labelledby="backlinks-title">
           <h2 class="section-title" id="backlinks-title">提到这篇的文章</h2>
-          <ul class="backlinks">
+          <ol class="post-rows">
             {backlinks.map((item) => (
-              <li>
-                <a class="backlink" href={getPostUrl(item)}>
-                  <span class="backlink-title">{item.data.title}</span>
-                  {item.data.description && <span class="backlink-lede">{item.data.description}</span>}
-                </a>
-              </li>
+              <PostRow post={item} />
             ))}
-          </ul>
+          </ol>
         </section>
       )
     }
