@@ -8,6 +8,9 @@ dist/
 # 草稿只存在本机，不进 git。
 src/content/drafts/
 
+# Beacon 的光标、工作副本和恢复快照只留在本机。
+.beacon/
+
 # 旧版 myblog 留在本机的回收站和导出目录，可能有没公开的草稿。
 .blog-trash/
 exports/
