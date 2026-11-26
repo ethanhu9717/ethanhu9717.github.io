@@ -151,6 +151,51 @@ const imageUrl = new URL(withBase(image ?? '/logo.png'), Astro.site);
           });
         }
 
+        let revealing = false;
+        const root = document.documentElement;
+        const reducedMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        function finishReveal() {
+          delete root.dataset.themeReveal;
+          root.classList.remove('theme-instant', 'theme-color-transition');
+          root.dispatchEvent(new Event('theme-reveal-done'));
+          revealing = false;
+        }
+
+        // 新颜色从主题按钮中心扩开。不支持时退回颜色渐变；减少动态效果时立刻切换。
+        function changeTheme(theme, manual) {
+          if (revealing) return;
+          if (reducedMotion()) {
+            applyTheme(theme, manual);
+            root.dispatchEvent(new Event('theme-reveal-done'));
+            return;
+          }
+          revealing = true;
+          root.dataset.themeReveal = '1';
+          if (typeof document.startViewTransition !== 'function') {
+            root.classList.add('theme-color-transition');
+            applyTheme(theme, manual);
+            window.setTimeout(finishReveal, 480);
+            return;
+          }
+          const rect = toggle?.getBoundingClientRect();
+          const x = rect && rect.width ? rect.left + rect.width / 2 : window.innerWidth - 48;
+          const y = rect && rect.height ? rect.top + rect.height / 2 : 28;
+          const radius = Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y));
+          root.style.setProperty('--theme-x', `${x}px`);
+          root.style.setProperty('--theme-y', `${y}px`);
+          root.style.setProperty('--theme-radius', `${radius}px`);
+          root.classList.add('theme-instant');
+          try {
+            document.startViewTransition(() => applyTheme(theme, manual)).finished.finally(finishReveal);
+          } catch {
+            root.classList.remove('theme-instant');
+            root.classList.add('theme-color-transition');
+            applyTheme(theme, manual);
+            window.setTimeout(finishReveal, 480);
+          }
+        }
+
         // 切到和系统一致的主题时清掉记录，回到「跟随系统」。
         function toggleTheme() {
           const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
@@ -159,7 +204,7 @@ const imageUrl = new URL(withBase(image ?? '/logo.png'), Astro.site);
             if (manual) localStorage.setItem(themeKey, next);
             else localStorage.removeItem(themeKey);
           } catch {}
-          applyTheme(next, manual);
+          changeTheme(next, manual);
         }
 
         const stored = readStored();
@@ -167,7 +212,7 @@ const imageUrl = new URL(withBase(image ?? '/logo.png'), Astro.site);
         toggle?.addEventListener('click', toggleTheme);
 
         media.addEventListener('change', () => {
-          if (!readStored()) applyTheme(systemTheme(), false);
+          if (!readStored()) changeTheme(systemTheme(), false);
         });
 
         // 按 D 键切换；在输入框里、用输入法打字或按着修饰键时不触发。

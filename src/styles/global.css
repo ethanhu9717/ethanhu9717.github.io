@@ -44,9 +44,6 @@ body {
   text-autospace: normal;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  transition:
-    background-color 180ms ease,
-    color 180ms ease;
 }
 
 ::selection {
@@ -377,12 +374,6 @@ kbd {
   line-height: 1.35;
   text-wrap: balance;
   transition: color 160ms ease;
-}
-
-.post-entry-lede {
-  margin: 0.4em 0 0;
-  color: var(--secondary);
-  text-wrap: pretty;
 }
 
 .post-entry .post-info {
@@ -1040,5 +1031,75 @@ kbd {
 @media (hover: none) {
   .prose .anchor {
     display: none;
+  }
+}
+
+/* 主题色变量可以渐变。只在不支持圆形揭示的浏览器里，切换时加上 theme-color-transition。 */
+@property --bg { syntax: "<color>"; inherits: true; initial-value: #ffffff; }
+@property --strong { syntax: "<color>"; inherits: true; initial-value: #0f0f0f; }
+@property --text { syntax: "<color>"; inherits: true; initial-value: #2e2e2e; }
+@property --secondary { syntax: "<color>"; inherits: true; initial-value: #4d4d4d; }
+@property --muted { syntax: "<color>"; inherits: true; initial-value: #6b6b6b; }
+@property --pill-bg { syntax: "<color>"; inherits: true; initial-value: #000000; }
+@property --pill-text { syntax: "<color>"; inherits: true; initial-value: #ffffff; }
+@property --accent-soft { syntax: "<color>"; inherits: true; initial-value: #f1f1f1; }
+@property --selection { syntax: "<color>"; inherits: true; initial-value: #dedede; }
+@property --line { syntax: "<color>"; inherits: true; initial-value: #dedede; }
+@property --line-strong { syntax: "<color>"; inherits: true; initial-value: #888888; }
+@property --table-th-border { syntax: "<color>"; inherits: true; initial-value: #909090; }
+@property --table-td-border { syntax: "<color>"; inherits: true; initial-value: #dadada; }
+@property --code-bg { syntax: "<color>"; inherits: true; initial-value: #f2f2f2; }
+@property --code-text { syntax: "<color>"; inherits: true; initial-value: #303030; }
+@property --pre-bg { syntax: "<color>"; inherits: true; initial-value: #f7f7f7; }
+@property --quote-border { syntax: "<color>"; inherits: true; initial-value: #aaaaaa; }
+
+html.theme-color-transition {
+  transition:
+    --bg 450ms ease,
+    --strong 450ms ease,
+    --text 450ms ease,
+    --secondary 450ms ease,
+    --muted 450ms ease,
+    --pill-bg 450ms ease,
+    --pill-text 450ms ease,
+    --accent-soft 450ms ease,
+    --selection 450ms ease,
+    --line 450ms ease,
+    --line-strong 450ms ease,
+    --table-th-border 450ms ease,
+    --table-td-border 450ms ease,
+    --code-bg 450ms ease,
+    --code-text 450ms ease,
+    --pre-bg 450ms ease,
+    --quote-border 450ms ease;
+}
+
+/* 圆形揭示期间关掉颜色过渡，避免快照拍到半截渐变。 */
+html.theme-instant,
+html.theme-instant * {
+  transition: none !important;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 2;
+  animation: theme-reveal 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes theme-reveal {
+  from {
+    clip-path: circle(0 at var(--theme-x) var(--theme-y));
+  }
+  to {
+    clip-path: circle(var(--theme-radius) at var(--theme-x) var(--theme-y));
   }
 }

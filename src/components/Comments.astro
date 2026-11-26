@@ -88,6 +88,8 @@ const themes = {
         let frameReady = false;
 
         function syncTheme() {
+          // 圆形揭示还没盖完时不换评论区，避免圆还没到就已经变色。
+          if (root.dataset.themeReveal) return;
           const theme = pageTheme();
           const frame = container.querySelector('iframe');
           if (!frameReady || !frame || theme === frameTheme) return;
@@ -114,6 +116,7 @@ const themes = {
           attributes: true,
           attributeFilter: ['data-theme'],
         });
+        root.addEventListener('theme-reveal-done', syncTheme);
 
         const script = document.createElement('script');
         script.src = `${giscusOrigin}/client.js`;
