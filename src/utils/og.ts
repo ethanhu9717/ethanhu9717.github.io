@@ -13,7 +13,7 @@ const TITLE_SIZES = [76, 66, 58, 50];
 const MAX_LINES = 3;
 
 // 和 themes.css 的浅色主题一致。
-const COLORS = { bg: '#f9f9f7', text: '#2d2d2b', muted: '#6b6b67', name: '#963f23' };
+const COLORS = { bg: '#ffffff', text: '#171717', muted: '#696969', name: '#171717' };
 const SANS = `'Noto Sans CJK SC', 'Noto Sans SC', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif`;
 const MONO = `'Noto Sans Mono CJK SC', 'JetBrains Mono', 'SF Mono', Menlo, 'DejaVu Sans Mono', monospace`;
 // 站标的那把伞，和 public/site-icons/ethan-hu-safari-pinned.svg 是同一个形状（64×64）。

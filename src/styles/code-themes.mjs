@@ -1,4 +1,4 @@
-// 代码高亮配色，取自 Claude Typora 主题的语法颜色。
+// 关键字使用粗体，注释使用斜体，在两套灰阶主题中都能分清语法层级。
 function createTheme(name, type, colors) {
   return {
     name,
@@ -23,7 +23,7 @@ function createTheme(name, type, colors) {
           'keyword.operator.expression',
           'variable.language',
         ],
-        settings: { foreground: colors.keyword },
+        settings: { foreground: colors.keyword, fontStyle: 'bold' },
       },
       {
         scope: ['string', 'punctuation.definition.string', 'string.template'],
@@ -61,26 +61,26 @@ function createTheme(name, type, colors) {
   };
 }
 
-export const claudeLight = createTheme('claude-light', 'light', {
-  background: '#ffffff',
-  comment: '#6b6b67',
-  keyword: '#a83f24',
-  string: '#007a3d',
-  number: '#8a5a16',
-  tag: '#9a3f35',
-  default: '#2d2d2b',
-  definition: '#365f9d',
-  variable: '#815025',
+export const monoLight = createTheme('mono-light', 'light', {
+  background: '#f7f7f7',
+  comment: '#696969',
+  keyword: '#161616',
+  string: '#555555',
+  number: '#474747',
+  tag: '#383838',
+  default: '#303030',
+  definition: '#202020',
+  variable: '#454545',
 });
 
-export const claudeDark = createTheme('claude-dark', 'dark', {
-  background: '#373735',
-  comment: '#b2b2b0',
-  keyword: '#ff7856',
-  string: '#4fd17c',
-  number: '#f1b36d',
-  tag: '#e49388',
-  default: '#f9f9f7',
-  definition: '#86a9df',
-  variable: '#dca06e',
+export const monoDark = createTheme('mono-dark', 'dark', {
+  background: '#1c1c1c',
+  comment: '#a3a3a3',
+  keyword: '#f4f4f4',
+  string: '#bdbdbd',
+  number: '#c7c7c7',
+  tag: '#dedede',
+  default: '#d6d6d6',
+  definition: '#eaeaea',
+  variable: '#cccccc',
 });

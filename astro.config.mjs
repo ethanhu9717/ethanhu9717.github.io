@@ -2,7 +2,7 @@ import { defineConfig } from 'astro/config';
 import { satteri } from '@astrojs/markdown-satteri';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
-import { claudeDark, claudeLight } from './src/styles/code-themes.mjs';
+import { monoDark, monoLight } from './src/styles/code-themes.mjs';
 import { SITE_URL } from './site.config.mjs';
 
 export default defineConfig({
@@ -26,8 +26,8 @@ export default defineConfig({
     syntaxHighlight: 'shiki',
     shikiConfig: {
       themes: {
-        light: claudeLight,
-        dark: claudeDark,
+        light: monoLight,
+        dark: monoDark,
       },
     },
   },

@@ -1,14 +1,34 @@
 @import './themes.css';
 
+@font-face {
+  font-family: Lora;
+  src: url('/fonts/lora/lora-latin-wght-normal.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Lora;
+  src: url('/fonts/lora/lora-latin-wght-italic.woff2') format('woff2');
+  font-style: italic;
+  font-weight: 400 700;
+  font-display: swap;
+}
+
 :root {
   /* 正文栏宽。根字号 18px 时约 740px，每行约 41 个汉字，和 Naval 的栏宽比例接近。 */
   --measure: 41rem;
   --gutter: 24px;
+  --header-padding-y: clamp(0.9rem, 1.6vw, 1.3rem);
   --radius: 8px;
   --font-sans:
-    -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB",
+    "Anthropic Sans Text", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB",
     "Noto Sans CJK SC", "Noto Sans SC", "Source Han Sans SC", "Microsoft YaHei",
     system-ui, sans-serif;
+  --font-reading:
+    "Anthropic Serif Text", "Anthropic Serif", Lora, Georgia, "Songti SC",
+    "Noto Serif CJK SC", "Noto Serif SC", "Source Han Serif SC", SimSun, serif;
   /* 只用在日期数字和代码上，里面没有中文字体。 */
   --font-mono:
     "JetBrains Mono NL", "JetBrains Mono", ui-monospace, "SFMono-Regular",
@@ -26,7 +46,7 @@ html {
   /* 375px 宽时 16px，1200px 起 18px；读者调大浏览器默认字号时整站跟着放大。 */
   font-size: clamp(1rem, 0.9375rem + 0.25vw, 1.125rem);
   background: var(--bg);
-  scroll-padding-top: 1.5rem;
+  scroll-padding-top: calc(2 * var(--header-padding-y) + 2.5rem);
   text-size-adjust: 100%;
 }
 
@@ -65,12 +85,12 @@ a {
 }
 
 a:hover {
-  color: var(--accent-text);
-  text-decoration-color: var(--accent-text);
+  color: var(--text);
+  text-decoration-color: var(--text);
 }
 
 :focus-visible {
-  outline: 2px solid var(--accent-text);
+  outline: 2px solid var(--text);
   outline-offset: 2px;
 }
 
@@ -95,31 +115,59 @@ time {
   margin-left: auto;
 }
 
-/* 页头学 Naval：通栏，左边只有名字，右边几个灰色链接，下面留足空白。 */
+/* 磨砂只铺在导航背后；颗粒使用一张可平铺的小纹理。 */
 .site-header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
   display: flex;
   align-items: baseline;
   justify-content: space-between;
   gap: 1rem;
-  padding: clamp(1.25rem, 3vw, 2.5rem) clamp(var(--gutter), 3.5vw, 3rem) 0;
-  margin-bottom: clamp(3rem, 8vw, 6rem);
+  padding: var(--header-padding-y) clamp(var(--gutter), 3.5vw, 3rem);
+  margin-bottom: clamp(2.5rem, 6vw, 5rem);
+  background-color: var(--bg);
+  background-image: url('./grain.png'), linear-gradient(115deg, transparent, color-mix(in srgb, var(--text) 3%, transparent));
+  border-bottom: 1px solid color-mix(in srgb, var(--text) 10%, transparent);
   line-height: 1.4;
 }
 
-/* 名字的颜色比其他陶土色强调深一些。 */
+@supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  .site-header {
+    background-color: color-mix(in srgb, var(--bg) 78%, transparent);
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+  }
+}
+
+@media (prefers-reduced-transparency: reduce), (forced-colors: active), print {
+  .site-header {
+    background: var(--bg);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+@media print {
+  .site-header {
+    position: static;
+  }
+}
+
 .site-title {
   /* 手机上好点：透明的内边距放大能点的范围，负外边距抵消掉，看起来和原来一样。下面几处同理。 */
   padding-block: 12px;
   margin-block: -12px;
-  color: var(--site-title);
-  font-family: var(--font-mono);
+  color: var(--text);
+  letter-spacing: -0.02em;
+  font-size: 1.18em;
   font-weight: 700;
   text-decoration: none;
   white-space: nowrap;
 }
 
 .site-title:hover {
-  color: var(--text);
+  text-decoration: underline;
 }
 
 .site-nav {
@@ -139,6 +187,10 @@ time {
 .site-nav a:hover,
 .site-nav a[aria-current="page"] {
   color: var(--text);
+}
+
+.site-nav a[aria-current="page"] {
+  font-weight: var(--font-strong);
 }
 
 /* 主题开关做成和链接一样不起眼的小图标；深色时半圆换到另一边。 */
@@ -177,6 +229,20 @@ time {
 .site-main {
   flex: 1;
   padding-bottom: clamp(4rem, 10vw, 7rem);
+}
+
+/* 文章和站名使用阅读字体；导航、日期和表单沿用各自的界面字体。 */
+.site-title,
+.page-heading h1,
+.post-header h1,
+.post-entry-title,
+.post-entry-lede,
+.post-row-title,
+.post-subtitle,
+.prose,
+.backlink,
+.archive-result {
+  font-family: var(--font-reading);
 }
 
 /* ---------- 标题和分区 ---------- */
@@ -226,30 +292,26 @@ time {
   margin-bottom: 0;
 }
 
-/* 文章上方的一行外部链接，像 Naval 的「Podcast X Apple Spotify …」：灰色小字，后面是陶土色的粗体链接。 */
 .home-links {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
   gap: 0.25em 0.9em;
-  margin: 0 0 3rem;
+  margin-top: clamp(3rem, 8vw, 5rem);
   line-height: 1.5;
-}
-
-.home-links-label {
-  color: var(--muted);
 }
 
 .home-links a,
 .home-links-qr {
-  color: var(--accent-text);
+  color: var(--text);
   font-weight: var(--font-strong);
   text-decoration: none;
 }
 
 .home-links a:hover,
 .home-links-qr:hover {
-  color: var(--text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 /* 视频号这类没有网页的：看起来和旁边的链接一样，点了弹出二维码。 */
@@ -296,7 +358,7 @@ time {
   display: none;
   margin: 0;
   padding: 0 1rem 1rem;
-  color: #6b6b67;
+  color: #696969;
   font-size: 0.8125em;
   line-height: 1.5;
   text-align: center;
@@ -316,7 +378,7 @@ time {
 }
 
 .post-entry + .post-entry {
-  margin-top: 3rem;
+  margin-top: clamp(2.5rem, 6vw, 3.75rem);
 }
 
 .post-entry-link {
@@ -330,7 +392,9 @@ time {
 }
 
 .post-entry-link:hover .post-entry-title {
-  color: var(--accent-text);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
 }
 
 /* 没有框，焦点框往外让一点，别贴着字。 */
@@ -342,7 +406,7 @@ time {
 .post-entry-title {
   margin: 0;
   font-size: 1.4em;
-  font-weight: var(--font-strong);
+  font-weight: 700;
   line-height: 1.4;
   text-wrap: balance;
   transition: color 160ms ease;
@@ -354,33 +418,28 @@ time {
   text-wrap: pretty;
 }
 
-/* 跟在摘要末尾的小字，像 Naval 的「More ›」。没有摘要时不留空。 */
-.post-entry-desc {
-  margin-right: 0.25em;
-}
-
-.post-entry-more {
+.post-entry-arrow {
   color: var(--muted);
-  font-size: 0.875em;
-  white-space: nowrap;
+  font-size: 0.7em;
+  font-weight: 400;
 }
 
 .post-entry .post-info {
   margin: 0.6em 0 0;
 }
 
-/* 列表最下面的「阅读更多」，像 Naval 的「Read More」：一行陶土色的粗字。 */
+/* 列表最下面的「阅读更多」，像 Naval 的「Read More」：一行加粗的链接。 */
 .load-more {
   display: inline-block;
   margin-top: 3rem;
-  color: var(--accent-text);
+  color: var(--text);
   font-size: 1.125em;
   font-weight: var(--font-strong);
   text-decoration: none;
 }
 
 .load-more:hover {
-  color: var(--text);
+  text-decoration: underline;
 }
 
 .load-more[aria-busy="true"] {
@@ -430,6 +489,12 @@ time {
   text-wrap: pretty;
 }
 
+.post-row-title:hover,
+.post-toc a:hover,
+.archive-result a:hover {
+  text-decoration: underline;
+}
+
 .year-group + .year-group {
   margin-top: 1.5em;
 }
@@ -459,7 +524,7 @@ time {
   margin: 0 0 2em;
 }
 
-/* 标题上方的日期用等宽字，和页头的名字呼应。 */
+/* 标题上方的日期用等宽字。 */
 .post-header .post-info {
   font-family: var(--font-mono);
 }
@@ -511,13 +576,13 @@ time {
   line-height: 1.6;
 }
 
-/* 标签和「标签：」、阅读时长一样是灰色，这两行读起来是一块附注；下划线还在，悬停照样变陶土色。 */
+/* 标签和「标签：」、阅读时长一样是灰色，这两行读起来是一块附注；悬停时加深并保留下划线。 */
 .post-meta .tag-list a {
   color: var(--muted);
 }
 
 .post-meta .tag-list a:hover {
-  color: var(--accent-text);
+  color: var(--text);
 }
 
 /* 「N 分钟阅读 · N 次浏览」和标题上方的日期一样用等宽字。 */
@@ -572,7 +637,7 @@ time {
 }
 
 .backlink:hover .backlink-title {
-  color: var(--accent-text);
+  text-decoration: underline;
 }
 
 .backlink-title {
@@ -694,7 +759,7 @@ time {
 }
 
 .prose .anchor:hover {
-  color: var(--accent-text);
+  color: var(--text);
 }
 
 .prose strong {
@@ -759,7 +824,7 @@ time {
 .prose mark {
   color: inherit;
   background: transparent;
-  text-decoration: underline wavy var(--accent-text);
+  text-decoration: underline wavy var(--text);
   text-underline-offset: 3px;
 }
 
@@ -818,7 +883,7 @@ time {
   font-size: 0.875rem;
 }
 
-/* 代码高亮跟随主题：浅色用 claude-light，深色切到 claude-dark。 */
+/* 代码高亮跟随主题：浅色用 mono-light，深色切到 mono-dark。 */
 :root[data-theme="dark"] .astro-code,
 :root[data-theme="dark"] .astro-code span {
   color: var(--shiki-dark) !important;
@@ -924,7 +989,7 @@ time {
 .copy-button {
   padding: 6px 4px;
   margin: -6px -4px;
-  color: var(--accent-text);
+  color: var(--text);
   background: none;
   border: 0;
   font: inherit;
@@ -935,7 +1000,7 @@ time {
 }
 
 .copy-button:hover {
-  color: var(--text);
+  text-decoration: underline;
 }
 
 /* ---------- 归档页搜索 ---------- */
@@ -975,6 +1040,16 @@ time {
   border-radius: 0;
   font: inherit;
   outline: none;
+}
+
+.archive-search-input:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 2px;
+}
+
+.archive-search-input::placeholder {
+  color: var(--muted);
+  opacity: 1;
 }
 
 /* 不要浏览器自带的蓝色清除按钮；按 Esc 或删掉文字即可回到列表。 */

@@ -5,7 +5,7 @@ import { AUTHOR_NAME, HOME_LINKS, SITE_DESCRIPTION, SITE_TITLE } from '../consts
 import { withBase } from '../utils/paths';
 import { getPublishedPosts, paginatePosts } from '../utils/posts';
 
-// 首页学 Naval：最上面一行外部链接，下面最新的 10 篇一篇接一篇，最下面「阅读更多」接着加载。精选和标签在归档页。
+// 社交入口位于文章流之后，加载下一页时仍在列表末尾。
 const [first] = paginatePosts(await getPublishedPosts());
 const siteUrl = new URL(withBase('/'), Astro.site).href;
 const jsonLd = {
@@ -21,10 +21,16 @@ const jsonLd = {
 
 <BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION} jsonLd={jsonLd}>
   {
-    HOME_LINKS.links.length > 0 && (
-      <div class="home-links">
-        <span class="home-links-label">{HOME_LINKS.label}</span>
-        {HOME_LINKS.links.map((link, index) =>
+    first.posts.length > 0 ? (
+      <PostFeed page={first} />
+    ) : (
+      <p class="empty-state">还没有发布文章，第一篇正在路上。</p>
+    )
+  }
+  {
+    HOME_LINKS.length > 0 && (
+      <nav class="home-links" aria-label="社交账号">
+        {HOME_LINKS.map((link, index) =>
           'qr' in link ? (
             <>
               {/* 二维码用浏览器自带的 popover：不用写脚本，点外面或按 Esc 关掉。 */}
@@ -40,14 +46,7 @@ const jsonLd = {
             <a href={link.href}>{link.label}</a>
           ),
         )}
-      </div>
-    )
-  }
-  {
-    first.posts.length > 0 ? (
-      <PostFeed page={first} />
-    ) : (
-      <p class="empty-state">还没有发布文章，第一篇正在路上。</p>
+      </nav>
     )
   }
 </BaseLayout>

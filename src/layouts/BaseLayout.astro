@@ -61,8 +61,8 @@ const imageUrl = new URL(withBase(image ?? '/logo.png'), Astro.site);
       )
     }
     <link rel="sitemap" href={withBase('/sitemap-index.xml')} />
-    <meta name="theme-color" content="#f9f9f7" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#2d2d2b" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#141414" media="(prefers-color-scheme: dark)" />
     <script is:inline>
       // 尽早写上 data-theme，避免闪一下另一套颜色。手动选过的主题存在 localStorage 里。
       (() => {
@@ -75,7 +75,7 @@ const imageUrl = new URL(withBase(image ?? '/logo.png'), Astro.site);
         const theme = manual ? stored : system;
         document.documentElement.dataset.theme = theme;
         if (manual) {
-          const color = theme === 'dark' ? '#2d2d2b' : '#f9f9f7';
+          const color = theme === 'dark' ? '#141414' : '#ffffff';
           document.querySelectorAll('meta[name="theme-color"]').forEach((meta) => {
             meta.setAttribute('content', color);
           });
@@ -127,7 +127,7 @@ const imageUrl = new URL(withBase(image ?? '/logo.png'), Astro.site);
     <script is:inline>
       (() => {
         const themeKey = 'dan-ding-theme';
-        const colors = { light: '#f9f9f7', dark: '#2d2d2b' };
+        const colors = { light: '#ffffff', dark: '#141414' };
         const media = matchMedia('(prefers-color-scheme: dark)');
         const toggle = document.querySelector('.theme-toggle');
         const metas = document.querySelectorAll('meta[name="theme-color"]');
