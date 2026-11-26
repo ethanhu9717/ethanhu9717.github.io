@@ -1,7 +1,6 @@
 ---
 import { render } from 'astro:content';
 import Comments from '../../components/Comments.astro';
-import CommentsPreconnect from '../../components/CommentsPreconnect.astro';
 import PostRow from '../../components/PostRow.astro';
 import TagList from '../../components/TagList.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
@@ -64,7 +63,6 @@ const jsonLd = {
   image={image}
   jsonLd={jsonLd}
 >
-  <CommentsPreconnect slot="head" />
   <article class="post" data-pagefind-body>
     <header class="post-header">
       <h1 data-pagefind-meta="title">{post.data.title}</h1>
@@ -93,6 +91,6 @@ const jsonLd = {
       )
     }
 
-    <Comments term={post.id} />
+    <Comments term={post.id} collapsed />
   </footer>
 </BaseLayout>

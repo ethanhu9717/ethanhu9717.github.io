@@ -575,8 +575,31 @@ kbd {
 /* 评论区（giscus）。iframe 里的配色和评论框样式在 public/giscus/，跟着页面的浅色、深色切换。
    登录 GitHub 回来时页面会跳到评论框，让上面的「评论」标题也露出来。
    150px 是 giscus 给 iframe 的最小高度，提前把位置占好。 */
+.comments-toggle {
+  padding: 0;
+  margin: 0;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font: inherit;
+  font-size: 0.875em;
+  font-weight: var(--font-strong);
+  line-height: 1.5;
+  cursor: pointer;
+}
+
+.comments-toggle:hover {
+  color: var(--text);
+  text-decoration: underline;
+}
+
 .comments-frame {
   position: relative;
+  margin-top: 0.6em;
+}
+
+.comments-toggle + .comments-frame {
+  margin-top: 0.8em;
 }
 
 .comments .giscus {
