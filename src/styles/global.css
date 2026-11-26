@@ -331,10 +331,35 @@ kbd {
   color: var(--text);
 }
 
-.post-entry-link:hover .post-entry-title {
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 0.18em;
+/* 悬停或键盘聚焦时，标题后面淡入一个箭头。触屏没有悬停，不常驻。 */
+.post-entry-title::after {
+  content: "→";
+  display: inline-block;
+  margin-left: 0;
+  color: var(--muted);
+  font-weight: 400;
+  opacity: 0;
+  transition:
+    opacity 180ms ease,
+    margin-left 180ms ease;
+}
+
+.post-entry-link:hover .post-entry-title::after,
+.post-entry-link:focus-visible .post-entry-title::after {
+  margin-left: 0.45em;
+  opacity: 1;
+}
+
+@media (hover: none) {
+  .post-entry-title::after {
+    content: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .post-entry-title::after {
+    transition: none;
+  }
 }
 
 /* 没有框，焦点框往外让一点，别贴着字。 */
