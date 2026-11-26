@@ -15,9 +15,9 @@ const { tag } = Astro.props as { tag: Tag };
 ---
 
 <BaseLayout
-  title={`标签：${tag.name}`}
+  title={tag.name}
   description={`关于「${tag.name}」的文章。`}
 >
-  <PageHeading title={`标签 / ${tag.name}`} description={`共 ${tag.posts.length} 篇`} />
+  <PageHeading title={tag.name} description={`共 ${tag.posts.length} 篇`} mark />
   <PostList posts={tag.posts} label={`关于 ${tag.name} 的文章`} />
 </BaseLayout>

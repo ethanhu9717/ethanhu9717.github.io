@@ -185,6 +185,25 @@ kbd {
   margin: 0 0 2.5rem;
 }
 
+.page-heading h1.heading-mark {
+  position: relative;
+  z-index: 0;
+  display: inline-block;
+}
+
+.page-heading h1.heading-mark::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: -0.08em;
+  right: -0.05em;
+  bottom: 0.06em;
+  height: 0.55em;
+  background: var(--mark);
+  border-radius: 46% 54% 48% 52% / 62% 48% 58% 42%;
+  transform: rotate(-1.5deg);
+}
+
 .page-heading h1,
 .post-header h1 {
   margin: 0;

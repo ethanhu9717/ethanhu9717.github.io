@@ -23,6 +23,7 @@
   --code-text: #303030;
   --pre-bg: #f7f7f7;
   --quote-border: #aaaaaa;
+  --mark: #c8c8c8;
 }
 
 :root[data-theme="dark"] {
@@ -44,6 +45,7 @@
   --code-text: #dedede;
   --pre-bg: #202020;
   --quote-border: #666666;
+  --mark: #3a3a3a;
 }
 
 /* 没开 JS 的访客：跟随系统深色设置。数值和上面深色主题保持一致。 */
@@ -67,5 +69,6 @@
     --code-text: #dedede;
     --pre-bg: #202020;
     --quote-border: #666666;
+    --mark: #3a3a3a;
   }
 }
